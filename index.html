@@ -8,6 +8,20 @@
   <link rel="stylesheet" href="./src/style.css"> -->
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'fintrack-purple': '#8477e4', 
+            'fintrack-pink-light': '#efeefc',
+            'fintrack-pink-dark': '#e584ee',
+            'fintrack-bg': '#f8faff',
+          }
+        }
+      }
+    }
+</script>
   
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
@@ -93,7 +107,6 @@
       filter: blur(45px);
     }
 
-          /* Efek Gerak Melayang & Berputar Halus */
       @keyframes bubble-float {
           0% { transform: translate(0, 0) rotate(0deg); }
           33% { transform: translate(30px, -50px) rotate(5deg); }
@@ -105,7 +118,6 @@
           animation: bubble-float 15s ease-in-out infinite;
       }
 
-      /* Biar gerakannya beda-beda tiap bola */
       .animation-delay-2000 { animation-delay: 2s; }
       .animation-delay-4000 { animation-delay: 4s; }
     </style>
@@ -387,9 +399,9 @@
           prevEl: '.swiper-button-prev',
         },
         breakpoints: {
-          320: { slidesPerView: 1, spaceBetween: 20 }, /* Untuk HP tampil 1 */
-          768: { slidesPerView: 2, spaceBetween: 30, centeredSlides: false }, /* Tablet tampil 2 */
-          1024: { slidesPerView: 3, spaceBetween: 30, centeredSlides: true }  /* Laptop/Desktop tampil 3 & tengah nyala */
+          320: { slidesPerView: 1, spaceBetween: 20 }, 
+          768: { slidesPerView: 2, spaceBetween: 30, centeredSlides: false }, 
+          1024: { slidesPerView: 3, spaceBetween: 30, centeredSlides: true }  
         }
       });
     });
@@ -412,12 +424,12 @@
     }
     
     .dashboard-item.active {
-      flex: 4; /* Jadi lebar */
+      flex: 4; 
       border: 4px solid #8477e4;
     }
 
     .dashboard-item:not(.active) {
-      flex: 1; /* Jadi ramping */
+      flex: 1;
       filter: grayscale(100%) opacity(50%);
     }
   </style>
@@ -512,24 +524,21 @@
       transition: all 0.4s ease;
     }
 
-    /* Tipografi Nama (H3) */
     .team-text-overlay h3 {
       color: white;
       font-weight: 700;
-      font-size: 1.25rem; /* Sedikit lebih besar agar tegas */
+      font-size: 1.25rem;
       letter-spacing: -0.02em;
       margin-bottom: 2px;
     }
 
-    /* Tipografi Role/Learning Path (P) */
     .team-text-overlay p {
       color: rgba(255, 255, 255, 0.9);
       font-size: 0.85rem;
       font-weight: 400;
-      margin-bottom: 15px; /* Jarak menuju ikon sosmed */
+      margin-bottom: 15px; 
     }
 
-    /* Kontainer Sosmed */
     .team-social-links {
       display: flex;
       gap: 10px;
@@ -551,7 +560,7 @@
     }
 
     .social-icon:hover {
-      background: #8477e4; /* Warna ungu khas FinTrack AI */
+      background: #8477e4; 
       transform: translateY(-3px);
       color: white;
     }
@@ -877,13 +886,12 @@
   </div>
 </section>
 
-<!-- ================= FOOTER STYLE (SUDAH DIBERSIHKAN DARI KEMBARAN) ================= -->
 <style>
   #footer-clean {
-    background: rgba(255, 255, 255, 0.05); /* Efek Kaca Super Transparan */
+    background: rgba(255, 255, 255, 0.05); 
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border-top: 1px solid rgba(132, 119, 228, 0.15); /* Garis batas atas halus */
+    border-top: 1px solid rgba(132, 119, 228, 0.15); 
     
     color: #6b7280;
     padding: 80px 0 40px;
@@ -1039,7 +1047,7 @@
       slidesPerView: 1,
       spaceBetween: 30,
       loop: true,
-      centeredSlides: true, /* <--- TAMBAHKAN INI BIAR KUNCI DI TENGAH */
+      centeredSlides: true, 
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
@@ -1047,11 +1055,11 @@
       breakpoints: {
         640: { 
           slidesPerView: 2, 
-          centeredSlides: false /* Di tablet kita matikan biar rapi */
+          centeredSlides: false 
         },
         1024: { 
           slidesPerView: 3, 
-          centeredSlides: true  /* <--- PASTIKAN NYALA DI LAYAR LAPTOP */
+          centeredSlides: true  
         },
       },
     });
