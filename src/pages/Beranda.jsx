@@ -137,46 +137,60 @@ const Beranda = () => {
 
             {/* RINGKASAN KEUANGAN */}
             <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-              <div className="flex justify-between items-start mb-2">
+              {/* Header Section */}
+              <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h3 className="text-base font-bold text-gray-900">Ringkasan Keuangan</h3>
-                  <p className="text-xs text-gray-500 mt-1">Kondisi keuangan kamu hari ini terlihat <span className="text-[#4caf50] font-bold">stabil</span></p>
+                  <h3 className="text-lg font-bold text-gray-900 tracking-tight">Ringkasan Keuangan</h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Kondisi keuangan kamu hari ini terlihat <span className="text-[#4caf50] font-bold">stabil</span>
+                  </p>
                 </div>
-                <button className="text-xs font-bold text-[#e0e0e0] flex items-center gap-1.5 hover:text-[#8477e4] transition-colors bg-[#fdfdfd] border border-gray-100 px-3 py-1.5 rounded-lg">
+                <button className="text-xs font-bold text-[#8477e4] flex items-center gap-2 hover:bg-[#f4f3ff] transition-all bg-white border-2 border-[#8477e4]/20 px-4 py-2 rounded-xl shadow-sm">
                   Catat Transaksi <i className="fas fa-plus"></i>
                 </button>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 mt-6">
-                <div className="border border-gray-100 bg-white p-4 rounded-2xl flex flex-col items-center text-center">
-                  <div className="flex items-center gap-2 mb-3 bg-[#f0eaff] text-[#8477e4] px-3 py-1.5 rounded-lg">
-                    <i className="fas fa-wallet text-[10px]"></i>
-                    <span className="text-[10px] font-bold">Total Saldo</span>
+              {/* Cards Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                {/* Total Saldo - Purple Focus */}
+                <div className="bg-white border-2 border-[#8477e4]/10 p-5 rounded-3xl flex flex-col items-center text-center hover:border-[#8477e4]/30 transition-all shadow-sm">
+                  <div className="flex items-center gap-2 mb-4 bg-[#f0eaff] text-[#8477e4] px-4 py-2 rounded-2xl shadow-[0_0_15px_rgba(132,119,228,0.2)]">
+                    <i className="fas fa-wallet text-sm"></i>
+                    <span className="text-[11px] font-extrabold uppercase tracking-widest">Total Saldo</span>
                   </div>
-                  <p className="text-lg font-bold text-[#8477e4]">Rp 3.250.000</p>
-                  <p className="text-[9px] text-gray-400 mt-2">Sisa saldo yang bisa digunakan</p>
+                  <p className="text-2xl font-black text-[#8477e4]">Rp 3.250.000</p>
+                  <p className="text-[10px] text-gray-400 mt-3 font-medium">Sisa saldo yang bisa digunakan</p>
                 </div>
-                <div className="border border-gray-100 bg-white p-4 rounded-2xl flex flex-col items-center text-center">
-                  <div className="flex items-center gap-2 mb-3 bg-[#e8f5e9] text-[#4caf50] px-3 py-1.5 rounded-lg">
-                    <i className="fas fa-arrow-down text-[10px]"></i>
-                    <span className="text-[10px] font-bold">Pemasukan</span>
+
+                {/* Pemasukan - Green Focus */}
+                <div className="bg-white border-2 border-[#4caf50]/10 p-5 rounded-3xl flex flex-col items-center text-center hover:border-[#4caf50]/30 transition-all shadow-sm">
+                  <div className="flex items-center gap-2 mb-4 bg-[#e8f5e9] text-[#4caf50] px-4 py-2 rounded-2xl shadow-[0_0_15px_rgba(76,175,80,0.2)]">
+                    <i className="fas fa-arrow-down text-sm"></i>
+                    <span className="text-[11px] font-extrabold uppercase tracking-widest">Pemasukan</span>
                   </div>
-                  <p className="text-lg font-bold text-[#4caf50]">+ Rp 5.000.000</p>
-                  <p className="text-[9px] text-gray-400 mt-2">Total uang masuk bulan ini</p>
+                  <p className="text-2xl font-black text-[#4caf50]">+ Rp 5.000.000</p>
+                  <p className="text-[10px] text-gray-400 mt-3 font-medium">Total uang masuk bulan ini</p>
                 </div>
-                <div className="border border-gray-100 bg-white p-4 rounded-2xl flex flex-col items-center text-center">
-                  <div className="flex items-center gap-2 mb-3 bg-[#ffebee] text-[#f44336] px-3 py-1.5 rounded-lg">
-                    <i className="fas fa-arrow-up text-[10px]"></i>
-                    <span className="text-[10px] font-bold">Pengeluaran</span>
+
+                {/* Pengeluaran - Red Focus */}
+                <div className="bg-white border-2 border-[#f44336]/10 p-5 rounded-3xl flex flex-col items-center text-center hover:border-[#f44336]/30 transition-all shadow-sm">
+                  <div className="flex items-center gap-2 mb-4 bg-[#ffebee] text-[#f44336] px-4 py-2 rounded-2xl shadow-[0_0_15px_rgba(244,67,54,0.2)]">
+                    <i className="fas fa-arrow-up text-sm"></i>
+                    <span className="text-[11px] font-extrabold uppercase tracking-widest">Pengeluaran</span>
                   </div>
-                  <p className="text-lg font-bold text-[#f44336]">- Rp 1.750.000</p>
-                  <p className="text-[9px] text-gray-400 mt-2">Total uang keluar bulan ini</p>
+                  <p className="text-2xl font-black text-[#f44336]">- Rp 1.750.000</p>
+                  <p className="text-[10px] text-gray-400 mt-3 font-medium">Total uang keluar bulan ini</p>
                 </div>
+
               </div>
 
-              <div className="mt-5 flex items-center justify-between bg-[#f4f3ff] p-3 rounded-xl border border-[#e8dffd]">
-                <p className="text-[11px] font-medium text-gray-600">Pantau riwayat transaksimu setiap bulan!</p>
-                <i className="fas fa-chevron-right text-gray-400 text-[10px]"></i>
+              {/* Footer Banner */}
+              <div className="mt-6 flex items-center justify-between bg-[#f4f3ff] p-4 rounded-2xl border-2 border-[#8477e4]/5 hover:bg-[#eceaff] transition-all cursor-pointer group shadow-inner">
+                <p className="text-xs font-semibold text-gray-600">Pantau riwayat transaksimu setiap bulan!</p>
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:translate-x-1 transition-all">
+                  <i className="fas fa-chevron-right text-[#8477e4] text-xs"></i>
+                </div>
               </div>
             </div>
 
