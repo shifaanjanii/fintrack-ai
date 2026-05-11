@@ -8,14 +8,11 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const handleLogin = (e) => {
-  e.preventDefault();
-  
-  console.log("Mencoba login dengan:", email, password);
-
-  alert("Login berhasil! Selamat datang di Dashboard FinTrack AI.");
-
-  navigate('/beranda'); 
-};
+    e.preventDefault();
+    alert("Login berhasil! Selamat datang kembali di FinTrack AI.");
+    // LANGSUNG KE BERANDA
+    navigate('/beranda'); 
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 md:p-8 font-poppins selection:bg-[#8477e4] selection:text-white overflow-hidden relative">

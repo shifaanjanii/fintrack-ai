@@ -1,332 +1,319 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import { 
-  Home, Receipt, PieChart as PieIcon, Target, BrainCircuit, 
-  FileText, Settings, LogOut, Search, Bell, User, 
-  CheckCircle2, ChevronRight, Laptop, Home as HomeIcon, ShoppingBag, PiggyBank, ScanLine, FileEdit
-} from 'lucide-react';
 
-// Data untuk Donut Chart (Disamakan Warnanya: Ungu, Hijau, Merah)
-const dataAlokasi = [
-  { name: 'Kebutuhan', value: 1200000, color: '#8B5CF6' }, // Ungu
-  { name: 'Keinginan', value: 750000, color: '#10B981' },  // Hijau
-  { name: 'Tabungan', value: 500000, color: '#EF4444' },   // Merah
-];
+// Komponen Bar Animasi
+const AnimatedProgressBar = ({ value, maxValue, color }) => {
+  const [width, setWidth] = useState(0);
+  const percentage = (value / maxValue) * 100;
 
-// Custom Tooltip untuk Donut Chart
-const CustomTooltip = ({ active, payload }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-100 font-poppins text-sm">
-        <p className="font-semibold text-gray-800">{payload[0].name}</p>
-        <p className="text-gray-600">Rp {payload[0].value.toLocaleString('id-ID')}</p>
-      </div>
-    );
-  }
-  return null;
-};
-
-export default function Beranda() {
-  const navigate = useNavigate();
-
-  // Animasi masuk halaman
-  const pageVariants = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-    exit: { opacity: 0, y: -20 }
-  };
-
-  // Class untuk efek hover kartu terangkat (Glassmorphism + Hover)
-  const cardHoverStyle = "bg-white/80 backdrop-blur-md border border-white/50 rounded-2xl shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer";
+  useEffect(() => {
+    const timer = setTimeout(() => setWidth(percentage > 100 ? 100 : percentage), 150);
+    return () => clearTimeout(timer);
+  }, [percentage]);
 
   return (
-    <motion.div 
-      className="flex h-screen bg-fintrack-bg font-poppins overflow-hidden"
-      variants={pageVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
-      {/* 1. SIDEBAR */}
-      <aside className="w-64 bg-white shadow-xl flex flex-col justify-between z-20">
-        <div>
-          <div className="p-6 flex justify-center items-center">
-            {/* Ganti src dengan logo FinTrack AI kamu */}
-            <img src="/assets/logo-fintrack.png" alt="FinTrack AI" className="h-12 object-contain" />
+    <div className="w-full bg-[#f4f6f8] rounded-full h-2.5 relative overflow-hidden mt-2">
+      <div
+        className="h-2.5 rounded-full transition-all duration-1000 ease-out"
+        style={{ width: `${width}%`, backgroundColor: color }}
+      ></div>
+    </div>
+  );
+};
+
+const Beranda = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen bg-[#f8f6ff] font-poppins relative overflow-hidden flex selection:bg-[#8477e4]/20">
+      
+      {/* BACKGROUND BUBBLE HALUS */}
+      <style>{`
+        .color-bubble { position: fixed; border-radius: 50%; z-index: 1; pointer-events: none; filter: blur(120px); opacity: 0.5; }
+        .bubble-1 { width: 500px; height: 500px; background: #e0d4fc; bottom: -10%; left: -5%; }
+        .bubble-2 { width: 400px; height: 400px; background: #fce4ec; top: 20%; right: -5%; }
+      `}</style>
+      <div className="color-bubble bubble-1"></div>
+      <div className="color-bubble bubble-2"></div>
+
+      {/* =========================================
+          1. SIDEBAR (KIRI)
+      ========================================= */}
+      <div className="w-64 bg-white border-r border-[#f0f0f0] px-6 py-8 flex flex-col z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+        <div className="flex flex-col items-center mb-10">
+          <img src="gambar/logo.png" className="w-16 mb-2" alt="Logo" />
+          <span className="font-bold text-lg tracking-tight text-gray-900 text-center">FinTrack AI</span>
+        </div>
+
+        {/* Menu Sidebar pakai Gambar Asli */}
+        <nav className="space-y-4 flex-grow font-medium">
+          {[
+            { n: "Beranda", img: "gambar/beranda.png", active: true },
+            { n: "Transaksi", img: "gambar/transaksi.png" },
+            { n: "Budget", img: "gambar/budget.png" },
+            { n: "Goals", img: "gambar/goals.png" },
+            { n: "AI", img: "gambar/ai.png" },
+            { n: "Laporan", img: "gambar/laporan.png" }
+          ].map(item => (
+            <div 
+              key={item.n} 
+              className={`flex items-center gap-4 cursor-pointer p-3.5 rounded-2xl transition-all ${
+                item.active 
+                ? 'bg-[#f0eaff] text-[#8477e4] font-bold shadow-sm' 
+                : 'text-gray-400 hover:bg-gray-50 hover:text-gray-900'
+              }`}
+            >
+              <img 
+                src={item.img} 
+                className={`w-6 h-6 object-contain ${!item.active ? 'grayscale opacity-70' : ''}`} 
+                alt={item.n} 
+              />
+              <span className="text-sm">{item.n}</span>
+            </div>
+          ))}
+        </nav>
+
+        {/* Bagian Bawah Sidebar */}
+        <div className="border-t border-gray-100 pt-6 space-y-4 font-medium">
+          <div className="flex items-center gap-4 cursor-pointer p-3.5 rounded-2xl text-gray-400 hover:bg-gray-50 hover:text-gray-900 transition-all">
+            <img src="gambar/pengaturan.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Setting" />
+            <span className="text-sm">Pengaturan</span>
           </div>
-          <nav className="mt-6 px-4 space-y-2">
-            <button className="flex items-center w-full px-4 py-3 bg-indigo-50 text-indigo-600 rounded-xl font-semibold transition-all">
-              <Home className="w-5 h-5 mr-3" /> Beranda
-            </button>
-            <button onClick={() => navigate('/transaksi')} className="flex items-center w-full px-4 py-3 text-gray-500 hover:bg-gray-50 hover:text-indigo-600 rounded-xl font-medium transition-all">
-              <Receipt className="w-5 h-5 mr-3" /> Transaksi
-            </button>
-            <button onClick={() => navigate('/budget')} className="flex items-center w-full px-4 py-3 text-gray-500 hover:bg-gray-50 hover:text-indigo-600 rounded-xl font-medium transition-all">
-              <PieIcon className="w-5 h-5 mr-3" /> Budget
-            </button>
-            <button onClick={() => navigate('/goals')} className="flex items-center w-full px-4 py-3 text-gray-500 hover:bg-gray-50 hover:text-indigo-600 rounded-xl font-medium transition-all">
-              <Target className="w-5 h-5 mr-3" /> Goals
-            </button>
-            <button onClick={() => navigate('/ai')} className="flex items-center w-full px-4 py-3 text-gray-500 hover:bg-gray-50 hover:text-indigo-600 rounded-xl font-medium transition-all">
-              <BrainCircuit className="w-5 h-5 mr-3" /> AI
-            </button>
-            <button className="flex items-center w-full px-4 py-3 text-gray-500 hover:bg-gray-50 hover:text-indigo-600 rounded-xl font-medium transition-all">
-              <FileText className="w-5 h-5 mr-3" /> Laporan
-            </button>
-          </nav>
+          <div 
+            onClick={() => navigate('/login')} 
+            className="flex items-center gap-4 cursor-pointer p-3.5 rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all"
+          >
+            <img src="gambar/logout.png" className="w-6 h-6 object-contain grayscale opacity-70" alt="Logout" />
+            <span className="text-sm">Logout</span>
+          </div>
         </div>
-        <div className="px-4 py-6 space-y-2 border-t border-gray-100">
-          <button className="flex items-center w-full px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-all">
-            <Settings className="w-5 h-5 mr-3" /> Pengaturan
-          </button>
-          <button className="flex items-center w-full px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-medium transition-all">
-            <LogOut className="w-5 h-5 mr-3" /> Logout
-          </button>
-        </div>
-      </aside>
+      </div> {/* <-- Ini adalah tag penutup yang kemungkinan hilang tadi! */}
 
-      {/* 2. MAIN CONTENT AREA */}
-      <main className="flex-1 overflow-y-auto relative p-8">
-        {/* Dekorasi Bola Holografik (Opsional) */}
-        <div className="absolute top-10 right-10 w-32 h-32 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div className="absolute bottom-10 left-10 w-32 h-32 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-
+      {/* =========================================
+          2. MAIN CONTENT (KANAN)
+      ========================================= */}
+      <div className="flex-1 p-8 md:p-10 z-10 relative overflow-y-auto h-screen">
+        
         {/* HEADER */}
-        <header className="flex justify-between items-center mb-8 relative z-10">
+        <header className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold text-gray-800">Halo, Shifa Anjani ! 👋</h1>
-            <div className="flex items-center bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-medium border border-green-200">
-              <CheckCircle2 className="w-4 h-4 mr-1" /> Status : Hemat
+            <h1 className="text-2xl font-bold text-gray-900">Halo, Shifa Anjani ! 👋</h1>
+            <div className="flex items-center gap-1.5 text-[11px] font-bold bg-[#e8f5e9] text-[#4caf50] px-3 py-1.5 rounded-lg border border-[#4caf50]/20">
+              <i className="fas fa-check-circle"></i>
+              Status : Hemat
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input type="text" placeholder="Cari..." className="pl-10 pr-4 py-2 bg-white rounded-xl shadow-sm border border-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-300 w-64" />
+          <div className="flex items-center gap-5">
+            <div className="relative w-72">
+              <input type="text" placeholder="" className="w-full bg-white px-5 py-2.5 rounded-xl text-sm outline-none shadow-sm border border-gray-100" />
+              <i className="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
             </div>
-            <button className="p-2 bg-white rounded-xl shadow-sm hover:text-indigo-600 transition-colors"><Bell className="w-5 h-5 text-gray-500" /></button>
-            <button className="p-2 bg-indigo-100 rounded-xl shadow-sm text-indigo-600 transition-colors"><User className="w-5 h-5" /></button>
+            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#8477e4] shadow-sm cursor-pointer relative border border-gray-100">
+              <i className="fas fa-bell"></i>
+              <span className="absolute top-2 right-2.5 w-1.5 h-1.5 bg-red-500 rounded-full"></span>
+            </div>
+            <div className="w-10 h-10 bg-[#8477e4] rounded-full flex items-center justify-center text-white shadow-sm cursor-pointer border border-gray-100">
+              <i className="fas fa-user"></i>
+            </div>
+            <i className="fas fa-chevron-down text-gray-400 text-xs cursor-pointer"></i>
           </div>
         </header>
 
-        {/* HERO SECTION ROBOT */}
-        <div className="mb-6 relative z-10 flex items-center">
-           {/* Ganti dengan gambar Robot Finny aslimu */}
-          <img src="/assets/finny-hero.png" alt="Finny AI" className="w-32 h-32 object-contain mr-4 drop-shadow-xl z-20" />
-          <div className="bg-white px-6 py-4 rounded-t-2xl rounded-br-2xl rounded-bl-sm shadow-md border border-gray-100 ml-[-20px] z-10">
-            <p className="text-gray-700 font-medium">Ayo kelola keuangan bulan <strong>Mei</strong> mu bersama<br/>Fintrack AI!</p>
-          </div>
-        </div>
-
-        {/* DASHBOARD GRID */}
-        <div className="grid grid-cols-12 gap-6 relative z-10">
+        {/* GRID UTAMA LAYOUT */}
+        <div className="grid grid-cols-12 gap-6">
           
-          {/* KIRI: Ringkasan Keuangan (Klik ke /transaksi) */}
-          <div className={`col-span-7 ${cardHoverStyle} p-6 flex flex-col`} onClick={() => navigate('/transaksi')}>
-            <div className="flex justify-between items-center mb-2">
-              <h2 className="text-lg font-bold text-gray-800">Ringkasan Keuangan</h2>
-              <span className="text-xs text-indigo-400 font-medium bg-indigo-50 px-2 py-1 rounded-md">Catat Transaksi +</span>
-            </div>
-            <p className="text-sm text-gray-500 mb-4">Kondisi keuangan kamu hari ini terlihat <span className="text-green-500 font-medium">stabil</span></p>
+          {/* KOLOM KIRI (7/12) */}
+          <div className="col-span-12 xl:col-span-7 space-y-6">
             
-            <div className="flex gap-4 mb-4">
-              {/* Saldo */}
-              <div className="flex-1 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 hover:bg-indigo-50 transition-colors">
-                <div className="flex items-center text-indigo-500 mb-2"><Receipt className="w-4 h-4 mr-2"/> <span className="text-sm font-semibold">Total Saldo</span></div>
-                <h3 className="text-xl font-bold text-indigo-900 mb-1">Rp 3.250.000</h3>
-                <p className="text-xs text-gray-400">Sisa saldo yang bisa digunakan</p>
-              </div>
-              {/* Pemasukan */}
-              <div className="flex-1 bg-green-50/50 p-4 rounded-xl border border-green-100 hover:bg-green-50 transition-colors">
-                <div className="flex items-center text-green-500 mb-2"><Receipt className="w-4 h-4 mr-2"/> <span className="text-sm font-semibold">Pemasukan</span></div>
-                <h3 className="text-xl font-bold text-green-600 mb-1">+ Rp 5.000.000</h3>
-                <p className="text-xs text-gray-400">Total uang masuk bulan ini</p>
-              </div>
-              {/* Pengeluaran */}
-              <div className="flex-1 bg-red-50/50 p-4 rounded-xl border border-red-100 hover:bg-red-50 transition-colors">
-                <div className="flex items-center text-red-500 mb-2"><Receipt className="w-4 h-4 mr-2"/> <span className="text-sm font-semibold">Pengeluaran</span></div>
-                <h3 className="text-xl font-bold text-red-600 mb-1">- Rp 1.750.000</h3>
-                <p className="text-xs text-gray-400">Total uang keluar bulan ini</p>
-              </div>
-            </div>
-
-            <div className="mt-auto bg-indigo-50 text-indigo-600 p-3 rounded-xl flex justify-between items-center group">
-              <span className="text-sm font-medium">Pantau riwayat transaksimu setiap bulan!</span>
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
-
-          {/* KANAN ATAS: Alokasi Keuangan (Klik ke /budget) */}
-          <div className={`col-span-5 ${cardHoverStyle} p-6`} onClick={() => navigate('/budget')}>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold text-gray-800">Alokasi Keuangan <span className="text-xs font-normal text-gray-400">(50 - 30 - 20)</span></h2>
-              <button className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Bulan Ini ⌄</button>
-            </div>
-            <div className="flex items-center">
-              <div className="w-1/2 h-32 relative">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie data={dataAlokasi} innerRadius={35} outerRadius={55} paddingAngle={5} dataKey="value" stroke="none">
-                      {dataAlokasi.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip content={<CustomTooltip />} />
-                  </PieChart>
-                </ResponsiveContainer>
-                {/* Status Masih Aman Badge Tengah Grafik */}
-                <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-semibold flex items-center border border-green-200">
-                  <CheckCircle2 className="w-3 h-3 mr-1" /> Masih Aman
-                </div>
-              </div>
-              <div className="w-1/2 pl-2 space-y-3">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <div className="flex items-center text-xs font-semibold text-gray-700"><span className="w-2 h-2 rounded-full bg-fintrack-purple mr-2"></span>Kebutuhan (50%)</div>
-                    <div className="text-[10px] text-gray-400 ml-4">45% Terpakai</div>
-                  </div>
-                  <span className="text-xs font-semibold">Rp 1.200.000</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <div className="flex items-center text-xs font-semibold text-gray-700"><span className="w-2 h-2 rounded-full bg-fintrack-green mr-2"></span>Keinginan (30%)</div>
-                    <div className="text-[10px] text-gray-400 ml-4">25% Terpakai</div>
-                  </div>
-                  <span className="text-xs font-semibold">Rp 750.000</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <div className="flex items-center text-xs font-semibold text-gray-700"><span className="w-2 h-2 rounded-full bg-fintrack-red mr-2"></span>Tabungan (20%)</div>
-                    <div className="text-[10px] text-gray-400 ml-4">10% Terpakai</div>
-                  </div>
-                  <span className="text-xs font-semibold">Rp 500.000</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* KIRI BAWAH: Smart Budgeting (Klik ke /budget) */}
-          <div className={`col-span-7 ${cardHoverStyle} p-6`} onClick={() => navigate('/budget')}>
-             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-bold text-gray-800">Smart Budgeting</h2>
-              <span className="text-xs text-indigo-400 font-medium border border-indigo-100 px-2 py-1 rounded-md hover:bg-indigo-50 transition">Detail Lengkap +</span>
-            </div>
-            
-            <div className="space-y-6">
-              {/* Kebutuhan (Ungu) */}
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-fintrack-purple text-white rounded-xl"><HomeIcon className="w-5 h-5"/></div>
-                <div className="flex-1">
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm font-semibold text-gray-800">Kebutuhan (50%)</span>
-                    <span className="text-sm font-semibold text-gray-800">Rp 1.200.000 / 1.500.000</span>
-                  </div>
-                  <p className="text-xs text-gray-400 mb-2">Makanan, Kos Kosan, dll</p>
-                  <div className="w-full bg-gray-100 rounded-full h-2">
-                    <div className="bg-fintrack-purple h-2 rounded-full" style={{width: '80%'}}></div>
-                  </div>
-                </div>
-                <span className="text-xs font-semibold text-fintrack-purple w-16 text-right">80% Terpakai</span>
-              </div>
-
-              {/* Keinginan (Hijau) */}
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-fintrack-green text-white rounded-xl"><ShoppingBag className="w-5 h-5"/></div>
-                <div className="flex-1">
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm font-semibold text-gray-800">Keinginan (30%)</span>
-                    <span className="text-sm font-semibold text-gray-800">Rp 750.000 / 900.000</span>
-                  </div>
-                  <p className="text-xs text-gray-400 mb-2">Jajan, Nonton, dll</p>
-                  <div className="w-full bg-gray-100 rounded-full h-2">
-                    <div className="bg-fintrack-green h-2 rounded-full" style={{width: '83%'}}></div>
-                  </div>
-                </div>
-                <span className="text-xs font-semibold text-fintrack-green w-16 text-right">83% Terpakai</span>
-              </div>
-
-              {/* Tabungan (Merah) */}
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-fintrack-red text-white rounded-xl"><PiggyBank className="w-5 h-5"/></div>
-                <div className="flex-1">
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm font-semibold text-gray-800">Tabungan (20%)</span>
-                    <span className="text-sm font-semibold text-gray-800">Rp 500.000 / 1.000.000</span>
-                  </div>
-                  <p className="text-xs text-gray-400 mb-2">Dana Darurat, Investasi, dll</p>
-                  <div className="w-full bg-gray-100 rounded-full h-2">
-                    <div className="bg-fintrack-red h-2 rounded-full" style={{width: '50%'}}></div>
-                  </div>
-                </div>
-                <span className="text-xs font-semibold text-fintrack-red w-16 text-right">50% Terpakai</span>
-              </div>
-            </div>
-          </div>
-
-          {/* KANAN BAWAH: Dipecah 3 Kartu */}
-          <div className="col-span-5 flex flex-col gap-6">
-            
-            {/* Insight AI (Klik ke /ai) */}
-            <div className={`flex-1 ${cardHoverStyle} p-5 relative overflow-hidden flex flex-col justify-between`} onClick={() => navigate('/ai')}>
-              <h2 className="text-lg font-bold text-gray-800 mb-2 relative z-10">Insight AI</h2>
-              <div className="bg-indigo-50/70 p-3 rounded-xl border border-indigo-100 relative z-10 w-3/4">
-                <p className="text-xs text-gray-700 leading-relaxed">
-                  Shifa, Pengeluaran kamu di kategori <strong>"Keinginan"</strong> hampir mencapai batas.<br/><br/>
-                  Coba tahan dulu ya, biar tabungan tetap aman.
+            {/* HERO CARD (Warna Pastel, Robot Kiri) */}
+            <div className="bg-[#f0ebfc] rounded-3xl p-6 flex items-center gap-6 shadow-sm border border-[#e8dffd]">
+              <img src="gambar/robot-hero.png" className="w-28 h-28 object-contain drop-shadow-md" alt="Robot Hero" />
+              <div className="bg-white/60 backdrop-blur-sm px-6 py-4 rounded-2xl flex-1 border border-white">
+                <p className="text-sm font-bold text-gray-800 leading-relaxed">
+                  Ayo kelola keuangan bulan Mei mu bersama Fintrack AI!
                 </p>
               </div>
-              {/* Ganti dengan robot bawa laptop */}
-              <img src="/assets/finny-laptop.png" alt="Finny AI" className="absolute bottom-2 right-2 w-24 h-24 object-contain drop-shadow-md z-0" />
-              
-              <div className="mt-3 flex justify-between items-center group relative z-10 cursor-pointer">
+            </div>
+
+            {/* RINGKASAN KEUANGAN */}
+            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+              <div className="flex justify-between items-start mb-2">
                 <div>
-                  <h4 className="text-xs font-bold text-gray-800">Tips hari ini</h4>
-                  <p className="text-[10px] text-gray-500">Catat setiap pengeluaran kecilmu, bisa bantu kamu lebih hemat!</p>
+                  <h3 className="text-base font-bold text-gray-900">Ringkasan Keuangan</h3>
+                  <p className="text-xs text-gray-500 mt-1">Kondisi keuangan kamu hari ini terlihat <span className="text-[#4caf50] font-bold">stabil</span></p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+                <button className="text-xs font-bold text-[#e0e0e0] flex items-center gap-1.5 hover:text-[#8477e4] transition-colors bg-[#fdfdfd] border border-gray-100 px-3 py-1.5 rounded-lg">
+                  Catat Transaksi <i className="fas fa-plus"></i>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mt-6">
+                <div className="border border-gray-100 bg-white p-4 rounded-2xl flex flex-col items-center text-center">
+                  <div className="flex items-center gap-2 mb-3 bg-[#f0eaff] text-[#8477e4] px-3 py-1.5 rounded-lg">
+                    <i className="fas fa-wallet text-[10px]"></i>
+                    <span className="text-[10px] font-bold">Total Saldo</span>
+                  </div>
+                  <p className="text-lg font-bold text-[#8477e4]">Rp 3.250.000</p>
+                  <p className="text-[9px] text-gray-400 mt-2">Sisa saldo yang bisa digunakan</p>
+                </div>
+                <div className="border border-gray-100 bg-white p-4 rounded-2xl flex flex-col items-center text-center">
+                  <div className="flex items-center gap-2 mb-3 bg-[#e8f5e9] text-[#4caf50] px-3 py-1.5 rounded-lg">
+                    <i className="fas fa-arrow-down text-[10px]"></i>
+                    <span className="text-[10px] font-bold">Pemasukan</span>
+                  </div>
+                  <p className="text-lg font-bold text-[#4caf50]">+ Rp 5.000.000</p>
+                  <p className="text-[9px] text-gray-400 mt-2">Total uang masuk bulan ini</p>
+                </div>
+                <div className="border border-gray-100 bg-white p-4 rounded-2xl flex flex-col items-center text-center">
+                  <div className="flex items-center gap-2 mb-3 bg-[#ffebee] text-[#f44336] px-3 py-1.5 rounded-lg">
+                    <i className="fas fa-arrow-up text-[10px]"></i>
+                    <span className="text-[10px] font-bold">Pengeluaran</span>
+                  </div>
+                  <p className="text-lg font-bold text-[#f44336]">- Rp 1.750.000</p>
+                  <p className="text-[9px] text-gray-400 mt-2">Total uang keluar bulan ini</p>
+                </div>
+              </div>
+
+              <div className="mt-5 flex items-center justify-between bg-[#f4f3ff] p-3 rounded-xl border border-[#e8dffd]">
+                <p className="text-[11px] font-medium text-gray-600">Pantau riwayat transaksimu setiap bulan!</p>
+                <i className="fas fa-chevron-right text-gray-400 text-[10px]"></i>
               </div>
             </div>
 
-            {/* Quick Action & Goals (Sejajar horizontal) */}
-            <div className="flex gap-4">
+            {/* SMART BUDGETING */}
+            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-base font-bold text-gray-900">Smart Budgeting</h3>
+                <button className="text-[10px] font-bold text-gray-400 flex items-center gap-1.5 border border-gray-100 px-3 py-1.5 rounded-lg hover:text-[#8477e4]">
+                  Detail Lengkap <i className="fas fa-plus"></i>
+                </button>
+              </div>
               
-              {/* Quick Action (Klik ke /transaksi) */}
-              <div className={`w-1/2 flex flex-col justify-between p-4 ${cardHoverStyle}`} onClick={() => navigate('/transaksi')}>
-                <h2 className="text-sm font-bold text-gray-800 mb-3">Quick Action</h2>
-                <div className="flex gap-2">
-                  <div className="flex-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-xl p-3 flex flex-col items-center justify-center transition-colors">
-                    <FileEdit className="w-5 h-5 mb-1"/>
-                    <span className="text-[10px] font-semibold text-center leading-tight">Catat<br/>Transaksi</span>
+              <div className="space-y-5">
+                {[
+                  { n: "Kebutuhan", p: "50%", d: "Makanan, Kos Kosan, dll", v: 1200000, max: 1500000, c: "#8477e4", i: "fas fa-home", used: "80%" },
+                  { n: "Keinginan", p: "30%", d: "Jajan, Nonton, dll", v: 750000, max: 900000, c: "#4caf50", i: "fas fa-shopping-bag", used: "83%" },
+                  { n: "Tabungan", p: "20%", d: "Dana Darurat, Investasi, dll", v: 500000, max: 1000000, c: "#f44336", i: "fas fa-piggy-bank", used: "50%" },
+                ].map((item, idx) => (
+                  <div key={idx} className="flex gap-4 items-center">
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl shadow-sm" style={{backgroundColor: item.c}}>
+                      <i className={item.i}></i>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-end mb-1">
+                        <div>
+                          <p className="text-xs font-bold text-gray-900">{item.n} <span className="text-gray-500 font-normal">({item.p})</span></p>
+                          <p className="text-[9px] text-gray-400 mt-0.5">{item.d}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[10px] font-bold text-gray-900">Rp {item.v.toLocaleString('id-ID')} <span className="text-gray-400 font-normal">/ {item.max.toLocaleString('id-ID')}</span></p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1">
+                          <AnimatedProgressBar value={item.v} maxValue={item.max} color={item.c} />
+                        </div>
+                        <p className="text-[9px] font-bold" style={{color: item.c}}>{item.used} Terpakai</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-xl p-3 flex flex-col items-center justify-center transition-colors">
-                    <ScanLine className="w-5 h-5 mb-1"/>
-                    <span className="text-[10px] font-semibold text-center leading-tight">Scan<br/>Struck</span>
-                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* KOLOM KANAN (5/12) */}
+          <div className="col-span-12 xl:col-span-5 space-y-6">
+            
+            {/* ALOKASI KEUANGAN (DONUT CHART) */}
+            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-base font-bold text-gray-900">Alokasi Keuangan <span className="text-xs font-normal text-gray-400">(50 - 30 - 20)</span></h3>
+                <div className="flex items-center gap-1.5 bg-[#f4f3ff] px-3 py-1.5 rounded-lg text-[10px] font-bold text-gray-600 cursor-pointer">
+                  Bulan Ini <i className="fas fa-chevron-down text-[#8477e4]"></i>
                 </div>
               </div>
-
-              {/* Goals Setting (Klik ke /goals) */}
-              <div className={`w-1/2 flex flex-col justify-between p-4 ${cardHoverStyle}`} onClick={() => navigate('/goals')}>
-                <h2 className="text-sm font-bold text-gray-800 mb-3">Goals Setting</h2>
-                <div className="flex justify-between items-center px-4 mb-2">
-                   <ChevronRight className="w-4 h-4 text-gray-400 rotate-180 cursor-pointer hover:text-indigo-600" />
-                   <Laptop className="w-8 h-8 text-gray-600 drop-shadow-sm" />
-                   <ChevronRight className="w-4 h-4 text-gray-400 cursor-pointer hover:text-indigo-600" />
+              <div className="flex items-center gap-6">
+                <div className="w-32 h-32 relative">
+                  <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
+                    <circle cx="18" cy="18" r="14" fill="none" stroke="#f4f6f8" strokeWidth="8"></circle>
+                    <circle cx="18" cy="18" r="14" fill="none" stroke="#8477e4" strokeWidth="8" strokeDasharray="20 80" strokeDashoffset="0"></circle>
+                    <circle cx="18" cy="18" r="14" fill="none" stroke="#ffeb3b" strokeWidth="8" strokeDasharray="30 70" strokeDashoffset="-20"></circle>
+                    <circle cx="18" cy="18" r="14" fill="none" stroke="#4caf50" strokeWidth="8" strokeDasharray="50 50" strokeDashoffset="-50"></circle>
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <div className="flex items-center gap-1 text-[8px] font-bold bg-[#e8f5e9] text-[#4caf50] px-2 py-1 rounded-full">
+                      <i className="fas fa-check"></i> Masih Aman
+                    </div>
+                  </div>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-1.5 mb-1">
-                  <div className="bg-indigo-500 h-1.5 rounded-full" style={{width: '60%'}}></div>
+                <div className="flex-1 space-y-4">
+                  {[
+                    { n: "Kebutuhan (50%)", p: "45% Terpakai", v: 1200000, c: "#4caf50" },
+                    { n: "Keinginan (30%)", p: "25% Terpakai", v: 750000, c: "#ffeb3b" },
+                    { n: "Tabungan (20%)", p: "10% Terpakai", v: 500000, c: "#8477e4" },
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex justify-between items-center">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-2.5 h-2.5 rounded-full" style={{backgroundColor: item.c}}></div>
+                        <div>
+                          <p className="text-[10px] font-bold text-gray-900">{item.n}</p>
+                          <p className="text-[9px] text-gray-500">{item.p}</p>
+                        </div>
+                      </div>
+                      <p className="text-[10px] font-bold text-gray-900">Rp {item.v.toLocaleString('id-ID')}</p>
+                    </div>
+                  ))}
                 </div>
-                <p className="text-[10px] font-semibold text-indigo-900 text-center">60% Menuju mimpi kamu!</p>
               </div>
+            </div>
 
+            {/* INSIGHT AI */}
+            <div className="bg-[#f2eefd] rounded-3xl p-6 flex gap-4 shadow-sm border border-[#e8dffd]">
+              <div className="flex-1 space-y-2.5">
+                <h4 className="text-sm font-bold text-gray-900">Insight AI</h4>
+                <p className="text-[11px] leading-relaxed text-gray-700">Shifa, Pengeluaran kamu di kategori "Keinginan" hampir mencapai batas.</p>
+                <p className="text-[11px] font-bold text-gray-900">Coba tahan dulu ya, biar tabungan tetap aman.</p>
+                <div className="border-t border-gray-300/30 pt-2 mt-2">
+                  <p className="text-[10px] font-bold text-gray-900">Tips hari ini</p>
+                  <p className="text-[9px] text-gray-600 mt-0.5">Catat setiap pengeluaran kecilmu, bisa bantu kamu lebih hemat!</p>
+                </div>
+              </div>
+              <img src="gambar/robot-laptop.png" className="w-20 h-20 object-contain self-center" alt="Robot AI" />
+            </div>
+
+            {/* QUICK ACTION */}
+            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+              <h3 className="text-sm font-bold text-gray-900 mb-4">Quick Action</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-[#f0eaff] py-4 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer transition-transform hover:scale-105 border border-[#e8dffd]">
+                  <i className="fas fa-file-invoice text-xl text-[#8477e4]"></i>
+                  <span className="text-[10px] font-bold text-[#8477e4]">Catat Transaksi</span>
+                </div>
+                <div className="bg-[#fafafa] py-4 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer transition-transform hover:scale-105 border border-gray-200">
+                  <i className="fas fa-expand text-xl text-gray-800"></i>
+                  <span className="text-[10px] font-bold text-gray-800">Scan Struck</span>
+                </div>
+              </div>
+            </div>
+
+            {/* GOALS SETTING */}
+            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm text-center relative">
+              <h3 className="text-sm font-bold text-gray-900 text-left mb-4">Goals Setting</h3>
+              <div className="flex items-center justify-center gap-6 mb-4">
+                <i className="fas fa-chevron-left text-gray-400 cursor-pointer hover:text-gray-900"></i>
+                <img src="gambar/goals-laptop.png" className="w-12 h-12 object-contain" alt="Laptop Goals" />
+                <i className="fas fa-chevron-right text-gray-400 cursor-pointer hover:text-gray-900"></i>
+              </div>
+              <AnimatedProgressBar value={60} maxValue={100} color="#8477e4" />
+              <p className="text-[9px] font-bold text-gray-600 mt-2 text-left">60% Menuju mimpi kamu!</p>
             </div>
 
           </div>
         </div>
-
-      </main>
-    </motion.div>
+      </div>
+    </div>
   );
-}
+};
+
+export default Beranda;
