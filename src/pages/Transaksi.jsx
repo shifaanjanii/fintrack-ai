@@ -239,7 +239,7 @@ const Transaksi = () => {
               </div>
             </div>
 
-            {/* KARTU TIPS AI (IDENTIK FIGMA) */}
+            {/* KARTU TIPS AI (IDENTIK FIGMA - TEKS DIRAPATKAN) */}
             <div className="bg-white p-7 rounded-[2.5rem] shadow-[0_4px_24px_rgba(132,119,228,0.05)] border border-gray-100 flex flex-col relative overflow-hidden">
                {/* Ikon Bohlam */}
                <div className="flex items-center gap-4.5 mb-7 shrink-0 relative z-10">
@@ -250,17 +250,19 @@ const Transaksi = () => {
                </div>
 
                {/* Bubble Pesan & Robot Nongol */}
-               <div className="bg-[#f8f9fb] p-6 pr-12 rounded-2xl flex items-center relative z-0 border border-gray-50">
-                  <p className="text-[11px] font-medium text-gray-700 leading-relaxed max-w-[230px]">
+               <div className="bg-[#f8f9fb] p-6 rounded-2xl flex items-center relative z-0 border border-gray-50 min-h-[120px]">
+                  {/* === PERBAIKAN TEKS: max-w diperkecil agar teks turun === */}
+                  <p className="text-[11px] font-medium text-gray-700 leading-relaxed max-w-[170px] relative z-10">
                     Gunakan scan struk untuk menghemat waktu dan menghindari salah ketik. AI akan bantu kamu mencatat dengan akurat!
                   </p>
-                  {/* === AREA PERUBAHAN ROBOT === */}
+                  
+                  {/* Robot yang Menjebol Batas Bawah Kanan */}
                   <img 
                     src="/gambar/robothewo.png" 
                     alt="Robot Tips" 
-                    className="absolute -right-6 -bottom-6 w-[150px] object-contain animate-float z-10" 
+                    className="absolute -right-6 -bottom-6 w-[150px] object-contain animate-float z-20" 
                   />
-                </div>
+               </div>
 
                {/* Paginasi Empat Titik */}
                <div className="mt-8 flex justify-center items-center gap-2.5 relative z-10">
